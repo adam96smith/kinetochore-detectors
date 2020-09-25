@@ -390,7 +390,7 @@ def determine_points(stack,minDistance,T,T_change,xyz_res):
     return stack, 'success'
 
 
-def movie_maker(SNR,movie_length,arr_type):
+def movie_maker(SNR,movie_length):
     
     ttt = time.time()
     
@@ -415,13 +415,7 @@ def movie_maker(SNR,movie_length,arr_type):
     stack = tmp        
     
     # Constuct the Movie
-    if arr_type == 'float32':
-      out = np.zeros([xyz_res+1,2*(xyz_res+1),80,movie_length]).astype(np.float32)
-    elif arr_type == 'uint8':
-      out = np.zeros([xyz_res+1,2*(xyz_res+1),80,movie_length]).astype(np.uint8)
-    else:
-      raise Exception('Specified Array Type must be float32 or uint8')
-
+    out = np.zeros([xyz_res+1,2*(xyz_res+1),80,movie_length])
 
     # Determine the PSFs
     
@@ -463,8 +457,8 @@ def movie_maker(SNR,movie_length,arr_type):
 
     #Add the spots in manually rather than through convolution for efficiency
     for t in range(0,movie_length):
-        hyperstack = np.zeros([xyz_res+1,xyz_res+1,xyz_res+1]).astype(np.float32)
-        GT = np.zeros([xyz_res+1,xyz_res+1,xyz_res+1]).astype(np.float32)
+        hyperstack = np.zeros([xyz_res+1,xyz_res+1,xyz_res+1])
+        GT = np.zeros([xyz_res+1,xyz_res+1,xyz_res+1])
         
 ########################################################################################################################################
 
@@ -503,26 +497,12 @@ def movie_maker(SNR,movie_length,arr_type):
         background = fftconvolve(background,noise_spot,mode='same')
 ##########################################################################################################################################
         
-        if arr_type == 'float32':
-          output = np.concatenate((normalize(hyperstack),GT),axis=1)
-        elif arr_type == 'uint8':
-          output = (255*np.concatenate((normalize(hyperstack),GT),axis=1)).astype(np.uint8)
-        else:
-          raise Exception('Specified Array Type must be float32 or uint8')
-        
+        output = np.concatenate((normalize(hyperstack),GT),axis=1).astype(np.float32)
 
         for i in range(0,xyz_res):
             out[i,:,:,t] = cv2.resize(output[i,:,:], (80,2*(xyz_res+1)), cv2.INTER_LINEAR)
-          
-        if arr_type == 'float32':
-          tmp = I*normalize(background)/SNR
-        elif arr_type == 'uint8':
-          tmp = (255*I*normalize(background)/SNR).astype(np.uint8)
-        else:
-          raise Exception('Specified Array Type must be float32 or uint8')
-        
             
-        out[:,0:xyz_res+1,:,t] = np.maximum(tmp,out[:,0:xyz_res+1,:,t])
+        out[:,0:xyz_res+1,:,t] = np.maximum(I*normalize(background)/SNR,out[:,0:xyz_res+1,:,t])
 
     loc = np.zeros([92,3,movie_length])
     
@@ -530,6 +510,6 @@ def movie_maker(SNR,movie_length,arr_type):
     loc[N::,:,:] = stack[:,1,:,start_time:start_time+movie_length]
     loc[:,2,:] = 80/256*loc[:,2,:]
     
-    print('Movie Generated at: ', 1/round((time.time()-ttt)/movie_length,3), ' fps')
+    print('Movie Generated at: ', round((time.time()-ttt)/movie_length,3), ' fps')
     
     return out, loc
