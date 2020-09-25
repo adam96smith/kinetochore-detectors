@@ -21,7 +21,7 @@ python newby.py \
   --epochs 200 \
   --checkpoint newby_cp
 # Use the model on real data. (real data in a dir called 'test')
-python pix2pix.py \
+python newby.py \
   --mode evaluate \
   --test_dir test \
   --out_dir out_test \
