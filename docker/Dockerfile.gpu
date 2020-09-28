@@ -4,7 +4,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends git vim
 
 RUN mkdir /repos/
 
-RUN cd /repos/ && git clone --single-branch --branch harrison_v1 https://github.com/adam96smith/kinetochore-detectors && cd kinetochore-detectors/ && pip install requirements.txt
+RUN cd /repos/ && git clone --single-branch --branch harrison_v1 https://github.com/adam96smith/kinetochore-detectors && cd kinetochore-detectors/ 
+RUN pip install scipy numpy opencv-python scikit-image matplotlib Pillow
+
+## for some reason cannot find requirements.txt to install from there
 
 ##RUN mkdir /repos && cd /repos && \
 ##    git clone https://github.com/hammerlab/flowdec.git && \

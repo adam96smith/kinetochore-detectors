@@ -3,5 +3,5 @@ scipy
 scikit-image
 matplotlib
 Pillow
-cv2
+opencv-python
 # `tensorflow` or `tensorflow-gpu` must be installed, as well.
