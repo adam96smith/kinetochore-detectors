@@ -1,0 +1,7 @@
+numpy
+scipy
+scikit-image
+matplotlib
+Pillow
+cv2
+# `tensorflow` or `tensorflow-gpu` must be installed, as well.

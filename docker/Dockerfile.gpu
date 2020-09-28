@@ -1,0 +1,16 @@
+FROM tensorflow/tensorflow:2.0.3-gpu-py3
+
+RUN apt-get update && apt-get install -y --no-install-recommends git vim
+
+RUN mkdir /repos/ && mkdir /repos/kinetochore-detectors/
+
+RUN cd /repos/kinetochore-detectors/ && git clone --single-branch --branch harrison_v1 https://github.com/adam96smith/kinetochore-detectors && pip install requirements.txt
+
+##RUN mkdir /repos && cd /repos && \
+##    git clone https://github.com/hammerlab/flowdec.git && \
+##    cd flowdec/python && \
+##    pip install .
+
+RUN apt install nano
+
+WORKDIR /repos/kinetochore-detectors/
